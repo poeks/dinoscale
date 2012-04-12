@@ -1,20 +1,21 @@
 require 'rubygems'
 
-desc "initialize environment"
+desc "init env"
 task :env do
   require File.join('.', 'config', 'env.rb')
 end
 
 namespace :db do
 
-  desc "DESTRUCTIVE bootstrap of the database"
+  desc "destructive bootstrap of the db"
   task :bootstrap => :env do
     puts "Bootstrapping database."
     DataMapper.auto_migrate!
   end
 
-  desc "non-destructive migration of the database (e.g. rake db:migrate RACK_ENV=jo_dev)"
+  desc "non-destructive migration of the db"
   task :migrate => :env do
     DataMapper.auto_upgrade!
   end
+  
 end
