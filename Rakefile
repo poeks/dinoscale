@@ -23,7 +23,7 @@ namespace :heroku do
   
   desc "load your apps from heroku into the database"
   task :load => :env do
-    h = Herokini::API.new(confit.app.heroku.api_key)
+    h = Herokuni::API.new(confit.app.heroku.api_key)
     puts h.get_apps.inspect
   end
   

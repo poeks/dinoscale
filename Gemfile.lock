@@ -1,8 +1,8 @@
 GIT
-  remote: git://github.com/poeks/herokini.git
-  revision: 201e5fe782b2605838ca72de342cb15f0b36dcd8
+  remote: git://github.com/poeks/herokuni.git
+  revision: da5e7487eba5c89102cb426ba0bff0f3df249995
   specs:
-    herokini (0.1)
+    herokuni (0.1)
       faraday (~> 0.7.0)
 
 GEM
@@ -97,7 +97,7 @@ DEPENDENCIES
   dm-timestamps
   dm-types
   dm-validations
-  herokini!
+  herokuni!
   rack
   rake
   sinatra
