@@ -28,6 +28,8 @@ class App < ::Sinatra::Base
 
     helpers Helpers
     DataMapper.finalize
+    
+    confit File.join(root, 'config', 'app.yml') 
   end
 
   configure :production do

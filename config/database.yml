@@ -3,7 +3,7 @@ jo_dev:
   host: localhost
   username: poeks
   password:
-  database: oldrelic
+  database: herokuscale
 
 production:
   adapter: postgres
