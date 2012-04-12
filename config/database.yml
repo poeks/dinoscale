@@ -1,0 +1,13 @@
+jo_dev:
+  adapter: postgres
+  host: localhost
+  username: poeks
+  password:
+  database: oldrelic
+
+production:
+  adapter: postgres
+  host: localhost
+  username:
+  password:
+  database:

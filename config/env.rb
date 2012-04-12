@@ -1,7 +1,43 @@
-RUBY_VERSION[0..2] == '1.9' ? Encoding.default_internal = 'UTF-8' : $KCODE = "u"
 require "rubygems"
 require "bundler"
 Bundler.setup
 Bundler.require :default
 
-root = File.join(File.expand_path(File.join(File.dirname(__FILE__))), '..')
+class App < ::Sinatra::Base
+    
+  #def self.development?; (environment.to_s =~ /dev/ ? true : false); end
+  def self.configure(*envs, &block)
+    yield self if envs.empty? || envs.include?(environment.to_sym) || (environment.to_s =~ /dev/ && envs.first.eql?(:development))
+  end
+  
+  configure do
+    register Sinatra::Synchrony
+    Sinatra::Synchrony.overload_tcpsocket!
+    
+    set :root, File.join(File.expand_path(File.join(File.dirname(__FILE__))), '..')
+    set :public_folder, File.join(root, 'public')
+#    set :app_file, File.join(settings.root, 'app.rb')        
+
+    Dir.glob(File.join(root, 'lib', '**/*.rb')).each { |f| require f }
+    Dir.glob(File.join(root, 'models', '**/*.rb')).each { |f| require f }
+
+    use Rack::Session::Cookie
+    register ::Sinatra::Flash
+
+    require File.join(root, 'app')
+    require File.join(root, 'helpers')
+
+    helpers Helpers
+    DataMapper.finalize
+  end
+
+  configure :production do
+    DataMapper.setup :default, ENV['DATABASE_URL']
+  end
+  
+  configure :development do
+    DataMapper.setup :default, YAML.load_file(File.join(root, 'config', 'database.yml'))[environment.to_s]
+  end
+
+end
+
