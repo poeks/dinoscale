@@ -11,8 +11,8 @@ class App < ::Sinatra::Base
   end
   
   configure do
-    register Sinatra::Synchrony
-    Sinatra::Synchrony.overload_tcpsocket!
+    #register Sinatra::Synchrony
+    #Sinatra::Synchrony.overload_tcpsocket!
     
     set :root, File.join(File.expand_path(File.join(File.dirname(__FILE__))), '..')
     set :public_folder, File.join(root, 'public')
@@ -37,6 +37,7 @@ class App < ::Sinatra::Base
   end
   
   configure :development do
+    DataMapper::Logger.new STDOUT, :debug
     DataMapper.setup :default, YAML.load_file(File.join(root, 'config', 'database.yml'))[environment.to_s]
   end
 
