@@ -6,7 +6,7 @@ class Autoscale
     self.app = app
     self.interval_minutes = 10
     self.min_ratio, self.max_ratio = 0.72, 0.85
-    self.avg_ratio = (max_ratio + min_ratio) / 2.0
+    self.avg_ratio = (self.max_ratio + self.min_ratio) / 2.0
     self.min_dynos = 0 # it will never go below this value
     self.pessimism = 0.8 # 1 is max, 0 is min
     
@@ -33,27 +33,33 @@ class Autoscale
       current_dynos = app.dynos
     	current_workers = app.workers
       dynos_load_ratio = (load_ratio/(current_dynos.to_f/(current_dynos+current_workers))) * pessimism
+      
+      email_body = "App name: #{app.name}"
+    	email_body += "\n\nCurrent dynos: #{current_dynos}"
+    	email_body += "\n\nCurrent workers: #{current_workers}"
 
-    	puts "Current dynos: #{current_dynos}".yellow
-    	puts "Current workers: #{current_workers}".yellow
-
-    	puts ("Instance Usage (dynos+workers): %.2f%%" % (load_ratio*100.0)).yellow
-    	puts ("Current dyno load: %.2f%%" % (dynos_load_ratio * 100)).yellow
+    	email_body += ("\n\nInstance Usage (dynos+workers): %.2f%%" % (load_ratio*100.0))
+    	email_body += ("\n\nCurrent dyno load: %.2f%%" % (dynos_load_ratio * 100))
 
     	used_dynos = current_dynos*dynos_load_ratio
 
       should_dynos = (used_dynos/avg_ratio).ceil
       should_dynos = min_dynos if should_dynos < min_dynos
-      should_dynos = 100 if should_dynos > 100
+      if should_dynos > 30
+        email_body += "\n\nWARNING: Autoscale would like to set dynos to #{should_dynos}!"
+        should_dynos = 30 
+      end
+        
 
-      puts ("Amount of dynos to reach the %.2f%% of target load: #{should_dynos}" % (avg_ratio * 100)).yellow
+      email_body += ("\n\nAmount of dynos to reach the %.2f%% of target load: #{should_dynos}" % (avg_ratio * 100))
       time_set = Time.now
     	if dynos_load_ratio > max_ratio || dynos_load_ratio < min_ratio
     	  if should_dynos != current_dynos
           #heroku_output = try_run!("#{heroku_command} dynos #{should_dynos} --app #{app_name}")
           # TODO set dynos
-          puts "#{app.name} dynos adjusted to #{should_dynos}"
-          # TODO send email
+          email_body += "\n\n\nDynos adjusted from #{app.dynos} to #{should_dynos}"
+          puts email_body.green
+          ScaleMail::do(confit.app.sendgrid.to_email, 'Dynos Adjusted!', email_body)
         else
           puts "#{app.name} already has this amount of dynos set. Skipping."
         end
@@ -65,7 +71,7 @@ class Autoscale
     rescue Exception => e
       message = "\nSomething has failed scaling #{app.name}!\nNew Relic response: #{parsed.inspect}.\nException: #{e.class} #{e.message} \nerror:\n#{e.backtrace.join("\n")}\n"
       puts message
-      # TODO send email
+      ScaleMail::do(confit.app.sendgrid.to_email, 'Dynos Adjustment Error!', message)
     end
   end
   

@@ -32,6 +32,19 @@ class App < ::Sinatra::Base
     DataMapper.finalize
     
     confit File.join(root, 'config', 'app.yml') 
+    
+    Mail.defaults do
+      delivery_method :smtp, {
+        :address   => "smtp.sendgrid.net",
+        :port      => 587,
+        :domain    => confit.app.sendgrid.domain,
+        :user_name => confit.app.sendgrid.username,
+        :password  => confit.app.sendgrid.password,
+        :authentication => 'plain',
+        :enable_starttls_auto => true 
+      }
+    end
+    
   end
 
   configure :production do
@@ -44,4 +57,7 @@ class App < ::Sinatra::Base
   end
 
 end
+
+NEWRELIC_HOST = 'https://heroku.newrelic.com'
+HEROKU_ADDONS = 'https://addons.heroku.com'
 
