@@ -13,7 +13,7 @@
 		<p>Last Scraped: <%= app.last_scraped_at||'never' %></p>
 		<p>Last Scaled: <%= app.last_scaled_at||'never' %></p>	
 		
-		<% if app.new_relic_app_name and not app.newrelic_api_key %>
+		<% if app.new_relic_app_name and not app.new_relic_api_key %>
 			<a href="<%= confit.app.heroku.newrelic_host %>/accounts/<%= app.new_relic_id %>/applications">Get the App ID from the address bar</a> | 
 			<a href="<%= confit.app.heroku.newrelic_host %>/accounts/<%= app.new_relic_id %>/integrations?page=data_sharing">Get the API Key</a>
 		<% elsif not app.new_relic_app_name %>

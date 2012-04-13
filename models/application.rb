@@ -5,7 +5,7 @@ class Application
   property :name, String, :required => true, :length => 100
   property :dynos, Integer, :required => true
   property :workers, Integer, :required => true
-  property :newrelic_api_key, String
+  property :new_relic_api_key, String
   
   property :domain_name, String, :length => 255
   property :repo_migrate_status, String
@@ -40,15 +40,15 @@ class Application
   cattr_accessor :herokuni
   
   def self.newrelic_enabled
-    all(:order => :dynos.desc, :new_relic_app_name.not => nil, :newrelic_api_key.not => nil)
+    all(:order => :dynos.desc, :new_relic_app_name.not => nil, :new_relic_api_key.not => nil)
   end
 
   def self.newrelic_notenabled
-    all(:order => :dynos.desc, :new_relic_app_name.not => nil, :newrelic_api_key => nil)
+    all(:order => :dynos.desc, :new_relic_app_name.not => nil, :new_relic_api_key => nil)
   end
 
   def self.other
-    all(:order => :dynos.desc, :new_relic_app_name => nil, :newrelic_api_key => nil)
+    all(:order => :dynos.desc, :new_relic_app_name => nil, :new_relic_api_key => nil)
   end
   
   def scrape_heroku_config
