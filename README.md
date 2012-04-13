@@ -15,3 +15,5 @@
 ```
 
 * Requires NewRelic addon for each app
+* Add some cronjobs per the Rakefile
+* Run the server!
