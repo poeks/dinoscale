@@ -19,3 +19,4 @@
 * Bootstrap the db: ```bundle exec rake db:bootstrap```
 * Add some cronjobs per the Rakefile
 * Run the server!
+* To enable autoscaling for an app run: ```bundle exec rake heroku:add_new_relic_key APP=app_name KEY=newrelic_api_key APP_ID=newrelic_app_id``` 
