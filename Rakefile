@@ -34,7 +34,7 @@ namespace :heroku do
   desc "test2"
   task :test => :env do
     response = Curl::Easy.perform("https://rpm.newrelic.com/accounts/100101/applications.xml") do |curl| 
-        curl.headers["x-api-key"] = "d324d547d48805f4658bb6a5c3f26231a43887537b7b196"
+        curl.headers["x-api-key"] = ""
     end
     puts response.body_str
   end
