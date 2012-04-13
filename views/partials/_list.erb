@@ -1,0 +1,25 @@
+<div id="accordion">
+<% apps.each do |app| %>
+	
+	<h3><a href="#"><%= app.name %> (<%= app.dynos %> dynos) </a></h3>
+	<div>
+
+		<p>Dynos: <%= app.dynos %></p>
+		<p>Workers: <%= app.dynos %></p>
+		<p>New Relic Name: <%= app.new_relic_app_name %></p>
+		<p>New Relic App ID: <%= app.new_relic_id %></p>
+		
+		<p>Created: <%= app.heroku_created_at||'never' %></p>
+		<p>Last Scraped: <%= app.last_scraped_at||'never' %></p>
+		<p>Last Scaled: <%= app.last_scaled_at||'never' %></p>	
+		
+		<% if app.new_relic_app_name and not app.newrelic_api_key %>
+			<a href="<%= confit.app.heroku.newrelic_host %>/accounts/<%= app.new_relic_id %>/applications">Get the App ID from the address bar</a> | 
+			<a href="<%= confit.app.heroku.newrelic_host %>/accounts/<%= app.new_relic_id %>/integrations?page=data_sharing">Get the API Key</a>
+		<% elsif not app.new_relic_app_name %>
+			<a href="<%= confit.app.heroku.heroku_addons %>/?app=<%= app.name %>">Add the New Relic Heroku addon</a>
+		<% end %>
+	</div>
+	
+<% end %>
+</div>

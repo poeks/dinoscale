@@ -1,0 +1,4 @@
+<h1>New Relic Not Enabled</h1>
+<p>These apps do not have a New Relic api key specified but have been setup for New Relic. <a href="/help#key">Add the API key</a>.</p>
+
+<%= erb :'partials/_list', :layout => false, :locals => {:apps => Application.newrelic_notenabled } %>

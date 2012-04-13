@@ -5,7 +5,6 @@ class Application
   property :name, String, :required => true, :length => 100
   property :dynos, Integer, :required => true
   property :workers, Integer, :required => true
-  property :newrelic_enabled, Boolean, :required => true, :default => false
   property :newrelic_api_key, String
   
   property :domain_name, String, :length => 255
@@ -21,14 +20,52 @@ class Application
   property :owner_email, String
   property :create_status, String
 
+  property :database_url, String, :length => 255
+  property :new_relic_app_name, String
+  property :new_relic_license_key, String
+  property :new_relic_log, String
+  property :new_relic_id, String
+  property :new_relic_app_id, String
+  property :commit_hash, String
+  property :last_git_by, String
+  property :rack_env, String
+  property :lang, String
+
   property :created_at, DateTime, :index   => true
   property :updated_at, DateTime
   property :heroku_created_at, DateTime
   property :last_scraped_at, DateTime
   property :last_scaled_at, DateTime
   
-  def self.by_dynos
-    all(:order => :dynos.desc, :dynos.not => 0)
+  cattr_accessor :herokuni
+  
+  def self.newrelic_enabled
+    all(:order => :dynos.desc, :new_relic_app_name.not => nil, :newrelic_api_key.not => nil)
+  end
+
+  def self.newrelic_notenabled
+    all(:order => :dynos.desc, :new_relic_app_name.not => nil, :newrelic_api_key => nil)
+  end
+
+  def self.other
+    all(:order => :dynos.desc, :new_relic_app_name => nil, :newrelic_api_key => nil)
+  end
+  
+  def scrape_heroku_config
+    self.class.herokuni ||= Herokuni::API.new(confit.app.heroku.api_key)
+    body = self.class.herokuni.get_apps(self.name, 'config_vars')
+    hash = Yajl::Parser.new.parse body
+    
+    hash.each_pair do |key, value|
+      if self.respond_to?(key.downcase)
+        self.send("#{key.downcase}=", value)
+      end
+    end
+    
+    puts self.errors.inspect.red if !self.valid?
+    self.last_scraped_at = DateTime.now
+    self.save
+    self
   end
   
   def self.create_from_heroku(hash)

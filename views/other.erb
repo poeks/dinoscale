@@ -1,0 +1,4 @@
+<h1>Other</h1>
+<p>These apps do not have a New Relic api key specified and have not been setup for New Relic on Heroku. <a href="/help#addon">Add the addon</a>.</p>
+
+<%= erb :'partials/_list', :layout => false, :locals => {:apps => Application.other } %>

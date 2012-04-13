@@ -16,7 +16,9 @@ class App < ::Sinatra::Base
     
     set :root, File.join(File.expand_path(File.join(File.dirname(__FILE__))), '..')
     set :public_folder, File.join(root, 'public')
-
+    set :sessions, true
+    set :static, true
+    
     Dir.glob(File.join(root, 'lib', '**/*.rb')).each { |f| require f }
     Dir.glob(File.join(root, 'models', '**/*.rb')).each { |f| require f }
 

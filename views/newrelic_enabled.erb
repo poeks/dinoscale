@@ -1,0 +1,4 @@
+<h1>New Relic Enabled!</h1>
+<p>These apps have a New Relic api key specified.</p>
+
+<%= erb :'partials/_list', :layout => false, :locals => {:apps => Application.newrelic_enabled } %>

@@ -10,6 +10,8 @@ namespace :db do
   desc "destructive bootstrap of the db"
   task :bootstrap => :env do
     DataMapper.auto_migrate!
+    Rake::Task['heroku:load'].invoke
+    Rake::Task['heroku:scrape_config'].invoke
   end
 
   desc "non-destructive migration of the db"
@@ -30,29 +32,19 @@ namespace :heroku do
     end
     
   end
-  
-  desc "test2"
-  task :test => :env do
-    response = Curl::Easy.perform("https://rpm.newrelic.com/accounts/100101/applications.xml") do |curl| 
-        curl.headers["x-api-key"] = ""
-    end
-    puts response.body_str
-  end
-  
-  desc "test"
-  task :newrelicify => :env do
-    #/apps/:app/config_vars
-    app = Application.first(:name => ENV['APP']) or (puts "No app! Do APP=blah";exit)
-    h = Herokuni::API.new(confit.app.heroku.api_key)
-    puts h.get_apps(app.name, 'config_vars')
     
+  desc "Scrape the Heroku config for each app"
+  task :scrape_config => :env do
+    Application.all.each do |app|
+      app.scrape_heroku_config
+    end
   end
   
-  desc "save a newrelic api key APP=scg-blah-yadda KEY=newrelic_api_key"
+  desc "Save a newrelic api key APP=scg-blah-yadda KEY=newrelic_api_key APP_ID=newrelic_app_id"
   task :add_newrelic_key => :env do
     app = Application.first(:name => ENV['APP'])
     app.newrelic_api_key = ENV['KEY']
-    app.newrelic_enabled = true
+    app.new_relic_app_id = ENV['APP_ID']
     app.save
     
     if app and app.saved?
