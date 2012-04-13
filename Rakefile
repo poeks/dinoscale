@@ -11,7 +11,7 @@ namespace :db do
   task :bootstrap => :env do
     DataMapper.auto_migrate!
     Rake::Task['heroku:load'].invoke
-    Rake::Task['heroku:scrape_config'].invoke
+    Rake::Task['heroku:scrape'].invoke
   end
 
   desc "non-destructive migration of the db"
