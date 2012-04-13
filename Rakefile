@@ -21,17 +21,15 @@ namespace :db do
   
 end
 
-namespace :new_relic do
-
-  task :test => :env do
-    app = Application.first(:new_relic_api_key.not => nil)
-    newrelic = NewRelic.new(app)
-    newrelic.autoscale
-  end
-  
-end
-
 namespace :heroku do
+  
+  task :autoscale => :env do
+    Application.newrelic_enabled.each do |app| 
+      puts "Autoscaling #{app.name}".yellow
+      newrelic = Autoscale.new(app)
+      newrelic.autoscale
+    end
+  end
   
   desc "Load your apps from heroku into the database"
   task :load => :env do
