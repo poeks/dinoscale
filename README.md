@@ -15,5 +15,7 @@
 ```
 
 * Requires NewRelic addon for each app
+* Install the gems: ```bundle install```
+* Bootstrap the db: ```bundle exec rake db:bootstrap```
 * Add some cronjobs per the Rakefile
 * Run the server!
