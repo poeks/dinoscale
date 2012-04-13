@@ -20,3 +20,4 @@ gem 'herokuni', :path => '/Users/poeks/work/herokuni' #:git => 'git://github.com
 gem 'yajl-ruby'
 gem 'extlib'
 gem 'haml'
+gem 'curb'

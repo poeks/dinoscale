@@ -12,6 +12,7 @@ GEM
     bcrypt-ruby (3.0.1)
     colored (1.2)
     confit (1.0.2)
+    curb (0.8.0)
     daemons (1.1.8)
     data_objects (0.10.8)
       addressable (~> 2.1)
@@ -96,6 +97,7 @@ PLATFORMS
 DEPENDENCIES
   colored
   confit
+  curb
   dm-aggregates
   dm-core
   dm-migrations
