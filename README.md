@@ -15,8 +15,9 @@
 ```
 
 * Requires NewRelic addon for each app
+* Customize config/database.yml to your environment and create the postgres database.
 * Install the gems: ```bundle install```
-* Bootstrap the db: ```bundle exec rake db:bootstrap```
+* Bootstrap the db: ```bundle exec rake db:bootstrap RACK_ENV=you_dev```
 * Add some cronjobs per the Rakefile
 * Run the server! (If you want--it's pretty much just informational.)
-* To enable autoscaling for an app run: ```bundle exec rake heroku:add_new_relic_key APP=app_name KEY=newrelic_api_key APP_ID=newrelic_app_id``` 
+* To enable autoscaling for an app run: ```bundle exec rake heroku:add_new_relic_key APP=app_name KEY=newrelic_api_key APP_ID=newrelic_app_id RACK_ENV=you_dev``` 
