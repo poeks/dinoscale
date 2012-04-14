@@ -1,15 +1,14 @@
 GIT
-  remote: git://github.com/poeks/herokuni.git
-  revision: ed1c7905012fc217bdca7f68d2360a0b87669f25
-  specs:
-    herokuni (0.2)
-      faraday (~> 0.7.6)
-
-GIT
   remote: git://github.com/poeks/oldrelic.git
   revision: 659e1414298c41d7290194f231776e08fb908d4c
   specs:
     oldrelic (0.2)
+      faraday (~> 0.7.6)
+
+PATH
+  remote: /Users/poeks/work/herokuni
+  specs:
+    herokuni (0.2)
       faraday (~> 0.7.6)
 
 GEM

@@ -1,6 +1,6 @@
 class Autoscale
 
-  attr_accessor :interval_minutes, :params, :app, :api, :data, :min_ratio, :max_ratio, :avg_ratio, :min_dynos, :pessimism
+  attr_accessor :interval_minutes, :params, :app, :api, :data, :min_ratio, :max_ratio, :avg_ratio, :min_dynos, :pessimism, :heroku
   
 	def initialize(app)
     self.app = app
@@ -18,10 +18,22 @@ class Autoscale
       "metrics[]" => "Instance/Busy",
     }
     self.api = Oldrelic::API.new(self.app.new_relic_api_key)
+    self.heroku = Herokuni::API.new(confit.app.heroku.api_key)
 	end
 
   def fetch
     self.data||=Yajl::Parser.new.parse(self.api.get_api('v1', 'applications', self.app.new_relic_app_id, 'data.json', self.params))
+  end
+  
+  def scale(dynos)
+    # POST /apps/:app/ps/scale
+    scale_params = {
+      'app' => app.name,
+      'type' => 'web',
+      'qty' => dynos,
+    }
+    scaled = self.heroku.post_apps(app.name, 'ps', 'scale', scale_params)
+    puts scaled.inspect
   end
   
   # Borrowed heavily from https://github.com/viki-org/heroku-autoscale/blob/master/autoscale
@@ -57,6 +69,7 @@ class Autoscale
     	  if should_dynos != current_dynos
           #heroku_output = try_run!("#{heroku_command} dynos #{should_dynos} --app #{app_name}")
           # TODO set dynos
+          self.scale(should_dynos)
           email_body += "\n\n\nDynos adjusted from #{app.dynos} to #{should_dynos}"
           puts email_body.green
           ScaleMail::do(confit.app.sendgrid.to_email, 'Dynos Adjusted!', email_body)
