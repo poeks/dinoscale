@@ -39,6 +39,10 @@ class Application
   
   cattr_accessor :herokuni
   
+  def self.get_herokuni
+    self.herokuni ||= Herokuni::API.new(confit.app.heroku.api_key)
+  end
+
   def self.newrelic_enabled
     all(:order => :dynos.desc, :new_relic_app_name.not => nil, :new_relic_api_key.not => nil)
   end
@@ -52,7 +56,7 @@ class Application
   end
   
   def scrape_heroku_config
-    self.class.herokuni ||= Herokuni::API.new(confit.app.heroku.api_key)
+    self.class.get_herokuni
     body = self.class.herokuni.get_apps(self.name, 'config_vars')
     hash = Yajl::Parser.new.parse body
     

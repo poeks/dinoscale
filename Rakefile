@@ -5,6 +5,23 @@ task :env do
   require File.join('.', 'config', 'env.rb')
 end
 
+namespace :account do
+
+  desc "create new account"
+  task :create => :env do
+    if not ENV['EMAIL'] or not ENV['PASSWORD']
+      puts "rake account:create EMAIL=you@you.com PASSWORD=blah".red
+      exit
+    else
+      account = Account.create(:email => ENV['EMAIL'], :password => ENV['PASSWORD'])
+      puts account.inspect.green
+      puts "Successfully created account".green
+    end
+    
+  end
+
+end
+
 namespace :db do
 
   desc "destructive bootstrap of the db"

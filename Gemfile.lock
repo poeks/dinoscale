@@ -8,7 +8,7 @@ GIT
 PATH
   remote: /Users/poeks/work/herokuni
   specs:
-    herokuni (0.2)
+    herokuni (0.3)
       faraday (~> 0.7.6)
 
 GEM

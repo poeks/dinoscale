@@ -49,6 +49,7 @@
               <li><a href="/applications/enabled">New Relic Enabled</a></li>
 			  <li><a href="/applications/notenabled">New Relic Not Enabled</a></li>
               <li><a href="/applications/other">Other</a></li>
+			  <% if current_account %><li><a href="/logout">Logout</a></li><% end %>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -57,7 +58,7 @@
 
     <div class="container">
 
-		<%= haml '=styled_flash', :layout => false %>
+		<h3><% if flash and flash[:error] %><div>Oops! <%= flash[:error] %></div></h3><% end %>
 		<%= yield %>
 		
 
